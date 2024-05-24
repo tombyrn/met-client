@@ -9,25 +9,27 @@ export default function Username() {
     const {username, setUsername} = useContext(UserCollectionContext);
     
     
-    return (<div className="m-5 w-1/2 flex flex-row justify-center items-center relative">
-        {editing ? 
-        <form className="m-2"  onSubmit={() => {
-            setUsername(value);
-            setEditing(false);
-        }}>
-            {/* @ts-ignore */}
-            <Input size="lg" variant="outlined"  label="Name" value={value} onChange={(e) => setValue(e.target.value)}/> 
-        </form>
-        : <>
-            {/* @ts-ignore */}
-            <Typography variant="h1" className="m-7">
-                {username}&#39;s Collections
-            </Typography> 
-        </>
-        }
-        {/* @ts-ignore */}
-        <Button onClick={(e) => {setEditing(!editing)}} >{editing ? "Cancel" : "Edit Name"} </Button>
+    return (            
+        <div className="w-full flex flex-row mb-5 justify-center items-center text-center">
 
-    </div>
+            {editing ? 
+                <form className="m-2"  onSubmit={() => {
+                    setUsername(value);
+                    setEditing(false);
+                }}>
+                    {/* @ts-ignore */}
+                    <Input size="lg" variant="outlined"  label="Name" value={value} onChange={(e) => setValue(e.target.value)}/> 
+                </form>
+                : <>
+                    {/* @ts-ignore */}
+                    <Typography variant="h1" className="m-7">
+                        {username}&#39;s Collections
+                    </Typography> 
+                </>
+            }
+            {/* @ts-ignore */}
+            <Button onClick={(e) => {setEditing(!editing)}} >{editing ? "Cancel" : "Edit Name"} </Button>
+
+        </div>
     )
 }

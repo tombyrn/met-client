@@ -12,14 +12,14 @@ export default function ArtworkPage() {
 
     // array of objects id strings stored in global context
     /* @ts-ignore */
-    const{collections, setCollections, selectedCollection, setSelectedCollection} = useContext(UserCollectionContext);
+    const { userCollection, setUserCollection } = useContext(UserCollectionContext);
 
     // data is the object fetched from met api
     const [data, setData] = useState({}) as any;
     const [loading, setLoading] = useState(true);
     
     // is this id present in the user collection
-    const [isPresent, setIsPresent] = useState(false);
+    const [isPresent, setPresent] = useState(false);
 
     // fetch artwork data on mount
     useEffect(() => {
@@ -29,33 +29,31 @@ export default function ArtworkPage() {
             setData(data);
             setLoading(false);
             {/* @ts-ignore */}
-            if (collections[selectedCollection] && collections[selectedCollection].includes(id)) {
-                setIsPresent(true);
-            } else {
-                setIsPresent(false);
-            }
+            userCollection.includes(id) ? 
+                setPresent(true) : setPresent(false)
         }
         fetchData();
-    }, [id, selectedCollection, collections])
-    const toggleCollection = () => {
-        let updatedCollections = {...collections};
+    }, [id, setUserCollection, userCollection])
 
-        if (!isPresent) {
-            {/* @ts-ignore */}
-            updatedCollections[selectedCollection].push(id);
-        } else {
-            {/* @ts-ignore */}
-            updatedCollections[selectedCollection] = updatedCollections[selectedCollection].filter((item: number) => item !== id);
+    const toggleCollection = () => {
+        // add id to user collection if it's not already present and there is room
+        if(userCollection.length < capacity && !userCollection.includes(id.toString())){
+            /* @ts-ignore */
+            setUserCollection([...userCollection, id]);
+            setPresent(true);
         }
-        setCollections(updatedCollections);
-        setIsPresent(!isPresent);
+        // remove id from user collection if it's present
+        else if(userCollection.includes(id.toString())){
+            /* @ts-ignore */
+            setUserCollection(userCollection.filter((item: string) => item !== id))
+            setPresent(false);
+        }
     }
     
     return (
         <Layout> 
             {!loading && ( <>
             {/* @ts-ignore */}
-            <Typography color="blue" variant="h3">Current Collection: {selectedCollection}</Typography>
                 {/* @ts-ignore */}
                 
                 <Card className="w-full h-full flex flex-col justify-center  items-center m-12">
