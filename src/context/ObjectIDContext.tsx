@@ -1,6 +1,13 @@
 import { createContext, useEffect, useState } from "react";
 
-export const ObjectIDContext = createContext([]);
+export const ObjectIDContext = createContext({
+    objectIDs: [] as string[], 
+    setObjectIDs: (arr: string[]) => {}, 
+    total: 0, 
+    setTotal: (num: number) => {}, 
+    shuffledIDs: [] as string[], 
+    setShuffledIDs: (arr: string[]) => {}
+});
 
 export function shuffle(arr: any[]) {
     let array = [...arr];
@@ -22,9 +29,9 @@ export function shuffle(arr: any[]) {
 }
 
 export function ObjectIDProvider({children}: {children: React.ReactNode}) {
-    const [objectIDs, setObjectIDs] = useState([]) as any;
-    const [shuffledIDs, setShuffledIDs] = useState([]) as any;
-    const [total, setTotal] = useState(0);
+    const [objectIDs, setObjectIDs] = useState<string[]>([]);
+    const [shuffledIDs, setShuffledIDs] = useState<string[]>([]) as any;
+    const [total, setTotal] = useState<number>(0);
 
     useEffect(() => {
         async function fetchData() {
@@ -38,7 +45,6 @@ export function ObjectIDProvider({children}: {children: React.ReactNode}) {
     }, [])
 
     return (<>
-        {/* @ts-ignore */}
         <ObjectIDContext.Provider value={{objectIDs, setObjectIDs, total, setTotal, shuffledIDs, setShuffledIDs}}>
             {children}
         </ObjectIDContext.Provider>

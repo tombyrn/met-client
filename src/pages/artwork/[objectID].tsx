@@ -1,18 +1,20 @@
 import Layout from "@/components/Layout";
-import { Button, Card, CardBody, CardHeader, Typography } from "@material-tailwind/react";
+import { Button, Card, CardBody, CardHeader, IconButton, Typography } from "@material-tailwind/react";
 import { useContext, useEffect, useState } from "react";
 import Image from 'next/image';
 import { UserCollectionContext, capacity } from "@/context/UserCollectionContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "@heroicons/react/16/solid";
+import { ObjectIDContext } from "@/context/ObjectIDContext";
 
 export default function ArtworkPage() {
     const router = useRouter();
     const id = Number(router.query.objectID as string) || 1;
 
     // array of objects id strings stored in global context
-    /* @ts-ignore */
     const { userCollection, setUserCollection } = useContext(UserCollectionContext);
+    const { objectIDs } = useContext(ObjectIDContext);
 
     // data is the object fetched from met api
     const [data, setData] = useState({}) as any;
@@ -20,115 +22,118 @@ export default function ArtworkPage() {
     
     // is this id present in the user collection
     const [isPresent, setPresent] = useState(false);
-
+    console.log('id',  id);
     // fetch artwork data on mount
     useEffect(() => {
+        let isMounted = true;
         async function fetchData() {
             const res = await fetch(`/api/artwork/${id}`);
             const data = await res.json();
-            setData(data);
-            setLoading(false);
-            {/* @ts-ignore */}
-            userCollection.includes(id) ? 
+            if(isMounted) {
+                setData(data);
+                setLoading(false);
+            }
+            userCollection.includes(id.toString()) ? 
                 setPresent(true) : setPresent(false)
         }
         fetchData();
+
+        return () => {isMounted = false}
     }, [id, setUserCollection, userCollection])
 
     const toggleCollection = () => {
         // add id to user collection if it's not already present and there is room
         if(userCollection.length < capacity && !userCollection.includes(id.toString())){
-            /* @ts-ignore */
-            setUserCollection([...userCollection, id]);
+            setUserCollection([...userCollection, id.toString()]);
             setPresent(true);
         }
         // remove id from user collection if it's present
         else if(userCollection.includes(id.toString())){
-            /* @ts-ignore */
-            setUserCollection(userCollection.filter((item: string) => item !== id))
+            setUserCollection(userCollection.filter((item: string) => item !== id.toString()));
             setPresent(false);
         }
     }
+
+    const clickLeft = () => {
+        const index = objectIDs.indexOf(id.toString());
+        if(index > 1) {
+            router.push(`/artwork/${objectIDs[index-1]}`);
+    }
+    
+    const clickRight = () => {
+        const index = objectIDs.indexOf(id.toString());
+        if(index < objectIDs.length - 2) {
+            router.push(`/artwork/${objectIDs[index+1]}`);
+    }
     
     return (
-        <Layout> 
+        <Layout title={data.objectID}> 
             {!loading && ( <>
-            {/* @ts-ignore */}
-                {/* @ts-ignore */}
                 
                 <Card className="w-full h-full flex flex-col justify-center  items-center m-12">
-                    {/* @ts-ignore */}
                     <CardHeader className="w-fit h-fit flex justify-center">
                         <Image src={data.primaryImage || data.primaryImageSmall || "/n-a.jpg"} alt={data.title || "no alt text available"} width={500} height={500} style={{objectFit: "contain"}}/>
                     </CardHeader>
 
-                    {/* @ts-ignore */}
                     <CardBody className="w-full p-10 flex flex-col justify-between items-center overflow-scroll text-ellipsis">
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
                             <Typography variant="small" className="m-2">
                                 Title
                             </Typography>
                             
-                            {/* @ts-ignore */}
                             <Typography variant="h3" className="m-2">
                                 {data.title || "N/A"}
                             </Typography>
 
                         </div>
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
                             <Typography variant="small" className="m-2">
                                 Artist Name
                             </Typography>
                             
-                            {/* @ts-ignore */}
                             <Typography variant="h5" className="m-2">
                                 {data.artistDisplayName || "N/A"}
                             </Typography>
                         </div>
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
                             <Typography variant="small" className="m-2">
                                 Artist Bio
                             </Typography>
                             
-                            {/* @ts-ignore */}
                             <Typography variant="h6" className="m-2">
                                 {data.artistDisplayBio || "N/A"}
                             </Typography>
                         </div>
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
                             <Typography variant="small" className="m-2">
                                 Artist Nationality
                             </Typography>
                             
-                            {/* @ts-ignore */}
+
                             <Typography variant="h6" className="m-2">
                                 {data.artistNationality || "N/A"}
                             </Typography>
                         </div>
 
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
+
                             <Typography variant="small" className="m-2">
                                 Department
                             </Typography>
 
-                            {/* @ts-ignore */}
+
                             <Typography variant="h6" className="m-2">
                                 {data.department || "N/A"}
                             </Typography>
                             
                         </div>
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
+
                             <Typography variant="small" className="m-2">
                                 Medium
                             </Typography>
 
-                            {/* @ts-ignore */}
+
                             <Typography variant="h6" className="m-2">
                                 {data.medium || "N/A"}
                             </Typography>
@@ -136,36 +141,36 @@ export default function ArtworkPage() {
                         </div>
 
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
+
                             <Typography variant="small" className="m-2">
                                 Begin-End Date
                             </Typography>
 
-                            {/* @ts-ignore */}
+
                             <Typography variant="h6" className="m-2">
                                 {`${data.objectBeginDate || "N/A"} - ${data.objectEndDate || "N/A"}`}
                             </Typography>
                         </div>
 
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
+
                             <Typography variant="small" className="m-2">
                                 Gallery Number
                             </Typography>
 
-                            {/* @ts-ignore */}
+
                             <Typography variant="h6" className="m-2">
                                 {data.GalleryNumber || "N/A"}
                             </Typography>
                         </div>
 
                         <div className="w-full flex flex-row justify-center items-center">
-                            {/* @ts-ignore */}
+
                             <Typography variant="small" className="m-2">
                                 Accesion Number
                             </Typography>
 
-                            {/* @ts-ignore */}
+
                             <Typography variant="h6" className="m-2">
                                 {data.accesionNumber || "N/A"}
                             </Typography>
@@ -174,19 +179,23 @@ export default function ArtworkPage() {
 
 
 
-                        {/* @ts-ignore */}
+
                         <Typography variant="h6" className="m-2">
                             {data.isHighlight ? "This work is a MET Highlight" : "This work is not a MET Highlight"}
                         </Typography>
 
-                        {/* @ts-ignore */}
+
                         <Link href={data.objectURL} className="m-2 text-blue-500 underline hover:text-purple-200 ">View on MET</Link>
-                        {/* @ts-ignore */}
+
                         <Button size="lg" ripple={true} onClick={toggleCollection}>{!isPresent ? "Add to Collection" : "Remove from Collection"}</Button>
                     </CardBody>
                 </Card>
             </>
             )}
+            <div className="w-full flex justify-between">
+                <IconButton color="white" onClick={clickLeft}><ArrowLeftCircleIcon className="w-full h-full"/></IconButton>
+                <IconButton color="white" onClick={clickRight}><ArrowRightCircleIcon className="w-full h-full"/></IconButton>
+            </div>
         </Layout>
     )
 }

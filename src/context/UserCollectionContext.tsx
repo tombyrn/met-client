@@ -2,15 +2,15 @@ import { createContext, useEffect, useState } from "react";
 
 export const UserCollectionContext = createContext({
     userCollection: [] as string[],
-    setUserCollection: () => {},
+    setUserCollection: (arr: string[]) => {},
     username: "User",
     setUsername: (name: string) => {}
 });
 export const capacity = 30
 
 export function UserCollectionProvider({children}: {children: React.ReactNode}) {
-    const [userCollection, setUserCollection] = useState([]);
-    const [username, setUsername] = useState("User");
+    const [userCollection, setUserCollection] = useState<string[]>([]);
+    const [username, setUsername] = useState<string>("User");
 
     // fetch user collection from local storage on mount
     useEffect(() => {
@@ -46,7 +46,6 @@ export function UserCollectionProvider({children}: {children: React.ReactNode}) 
     }, [username]);
 
     return (<>
-        {/* @ts-ignore */}
         <UserCollectionContext.Provider value={{userCollection, setUserCollection, username, setUsername}}>
             {children}
         </UserCollectionContext.Provider>
