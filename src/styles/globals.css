@@ -22,3 +22,16 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer base {
+
+  .bg-met {
+    background-color: #e4002b;
+  }
+  .bg-met-dark {
+    background-color: #6e182e;
+  }
+  .border-met {
+    border-color: #e4002b;
+  }
+}

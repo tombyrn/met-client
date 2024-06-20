@@ -13,12 +13,12 @@ export default function Page() {
 
     // get objectids and total from global context
     const {objectIDs, total, shuffledIDs, setShuffledIDs} = useContext(ObjectIDContext);
-    const [IDs, setIDs] = useState<string[]>(shuffledIDs); // array of objectIDs to be used for all pages
+    const [IDs, setIDs] = useState<number[]>(shuffledIDs); // array of objectIDs to be used for all pages
     const [searchTerm, setSearchTerm] = useState('');
     
     const pageNo = Number(router.query.pageNo as string) || 1;
     const [active, setActive] = useState(pageNo); // for active pagination number
-    const [artworkData, setArtworkData] = useState<string[]>([]); // array of 10 objectIDs to be fetched by the Artwork components
+    const [artworkData, setArtworkData] = useState<number[]>([]); // array of 10 objectIDs to be fetched by the Artwork components
 
 
     // slices objectIDs array to get the new artworkData for the page
@@ -87,36 +87,36 @@ export default function Page() {
             </div>
             
             {/* Artwork */}
-            <div className="p-6 w-full h-fit flex flex-col justify-start items-stretch overflow-y-scroll">
-                {artworkData && artworkData.map((id) => {
-                    return <Artwork key={id} id={id}/>
+            <div className="p-6 w-1/2 h-fit grid grid-cols-1 gap-4 overflow-y-scroll">
+                {artworkData && artworkData.map((id, index) => {
+                    return <Artwork key={index} id={id}/>
                 })}
             </div>
 
             {/* Pagination */}
 
-        <div className="flex items-center gap-8 mb-5">
-            <IconButton
-                size="sm"
-                variant="outlined"
-                onClick={prev}
-                disabled={pageNo === 1}
-            >
-                <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" />
-            </IconButton>
-            <Typography color="gray" className="font-normal">
-                Page <strong className="text-gray-900">{active}</strong> of{" "}
-                <strong className="text-gray-900">{total}</strong>
-            </Typography>
-            <IconButton
-                size="sm"
-                variant="outlined"
-                onClick={next}
-                disabled={pageNo === 10}
-            >
-                <ArrowRightIcon strokeWidth={2} className="h-4 w-4" />
-            </IconButton>
-        </div>
+            <div className="flex items-center gap-8 mb-5">
+                <IconButton
+                    size="sm"
+                    variant="outlined"
+                    onClick={prev}
+                    disabled={pageNo === 1}
+                >
+                    <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" />
+                </IconButton>
+                <Typography color="gray" className="font-normal">
+                    Page <strong className="text-gray-900">{active}</strong> of{" "}
+                    <strong className="text-gray-900">{total}</strong>
+                </Typography>
+                <IconButton
+                    size="sm"
+                    variant="outlined"
+                    onClick={next}
+                    disabled={pageNo === 10}
+                >
+                    <ArrowRightIcon strokeWidth={2} className="h-4 w-4" />
+                </IconButton>
+            </div>
 
         </Layout>
     );

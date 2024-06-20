@@ -18,8 +18,8 @@ export default function CollectionPage() {
 
             { !userCollection.length ? <>Collection Empty</> :(
                 <div className="w-full p-12">
-                    {userCollection.map((id: string) => {
-                        return <Artwork key={id} id={id}/>
+                    {userCollection.map((id, index) => {
+                        return <Artwork key={index} id={id}/>
                     })}
                 </div>
             )}

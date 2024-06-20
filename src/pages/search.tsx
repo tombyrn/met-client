@@ -44,7 +44,7 @@ export default function SearchPage() {
     return (
         <Layout title="Search">
             <div className="m-2 p-4 max-w-1/3 h-1/3 sticky">
-                <Input value={search} onChange={(e) => setSearch(e.target.value)} size="lg" label="Search" />
+                <Input value={search} onChange={(e) => setSearch(e.target.value)} size="lg" label="Search" crossOrigin={undefined} />
             </div>  
                 {/* Artwork */}
                 { artworkData.length > 0 &&  (

@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function MetLogo({main=false}: {main?: boolean}) {
   return (
-    <div className={`m-3 ml-6 mr-6 p-4 flex justify-center text-black ${main ? "size-64" : ""} hover:text-white hover:bg-red-900 hover:scale-110 hover:mr-12 hover:ml-12`}>
-      <Link href="/">
+    <div className={`m-3 ml-6 mr-6 p-4 flex justify-center text-black ${main ? "size-64" : ""} hover:text-white hover:bg-met-dark hover:scale-110 hover:mr-12 hover:ml-12`}>
+      <Link href="/" className="m-0 p-0 w-full h-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="80"
